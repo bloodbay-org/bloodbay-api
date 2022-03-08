@@ -1,0 +1,14 @@
+{
+  "port": 8080,
+  "storage": {
+    "bucketName": "bloodbay-org-files-test"
+  },
+  "smtp": {
+    "username": "",
+    "password": ""
+  },
+  "db": {
+    "url": "mongodb://root:root@localhost:27017"
+  },
+  "jwt_secret": "test"
+}

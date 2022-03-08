@@ -1,0 +1,3 @@
+export const PRECONDITION_FAILED_CODE = 412
+export const SERVER_ERROR_CODE = 500
+export const SUCCESS_CODE = 200
