@@ -12,6 +12,8 @@ import cases from './routes/cases';
 import files from './routes/files';
 import verify from './routes/emailVerification';
 import morgan from "morgan";
+import { Server } from "socket.io";
+import {getUIUrl} from "./utils/endpointUtils";
 
 const app = express();
 
@@ -71,4 +73,22 @@ export const closeMongoose = async () => {
 
 export const server = app.listen(config.port, () => {
     logger.info(`bloodbay-api API listening on port ${config.port}!`);
+});
+
+const io = new Server(server, {
+    cors: {
+        origin: getUIUrl(),
+        methods: ["GET", "POST"]
+    }
+});
+
+let usersOnline = 0
+
+io.on('connection', (socket) => {
+    usersOnline += 1
+    io.emit('userCount', usersOnline);
+    socket.on('disconnect', () => {
+        usersOnline -= 1
+        io.emit('userCount', usersOnline);
+    });
 });

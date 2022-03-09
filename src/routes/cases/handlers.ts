@@ -13,7 +13,7 @@ import {
 } from "../../services/case";
 import {decodeToken} from "../../utils/jwtUtils";
 import logger from "../../helpers/logger";
-import {countryMap} from "../../utils/localityUtils";
+import {getCountryByCode} from "../../utils/localityUtils";
 
 export const listAllCases = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -75,7 +75,8 @@ export const createNewCase = async (req: Request, res: Response): Promise<Respon
 
         const {title, description, tags, reportedByName, country} = req.body;
 
-        if (!countryMap.get(country)) {
+        // @ts-ignore
+        if (getCountryByCode(country) === 'UNKNOWN') {
             logger.log('error', INVALID_COUNTRY)
             return res.status(PRECONDITION_FAILED_CODE).json({error: INVALID_COUNTRY});
         }
