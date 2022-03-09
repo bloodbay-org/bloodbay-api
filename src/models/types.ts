@@ -10,6 +10,7 @@ export interface IUser {
 export interface MIUser extends IUser, Document {}
 
 export interface ICase {
+    country: string
     reportedById: string
     reportedByName: string
     title: string

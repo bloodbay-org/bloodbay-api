@@ -23,8 +23,9 @@ export async function deleteCaseById(id: string): Promise<MICase> {
     return CaseModel.deleteOne({_id: id}).lean();
 }
 
-export async function createCase(reportedById: string, title: string, description: string, tags: string[], reportedByName: string): Promise<MICase> {
+export async function createCase(reportedById: string, title: string, description: string, tags: string[], reportedByName: string, country: string): Promise<MICase> {
     return CaseModel.create({
+        country,
         reportedById,
         title,
         description,

@@ -1,8 +1,7 @@
 import {Request, Response} from 'express';
 import {PRECONDITION_FAILED_CODE, SERVER_ERROR_CODE, SUCCESS_CODE} from "../../utils/statusCodes";
 import {
-    AUTH_TOKEN_MUST_BE_SUPPLIED, CASE_ID_REQUIRED, ONLY_REPORTER_CAN_DELETE_CASE,
-    TITLE_DESCRIPTION_REQUIRED_TO_CREATE_CASE
+    AUTH_TOKEN_MUST_BE_SUPPLIED, CASE_ID_REQUIRED, INVALID_COUNTRY, ONLY_REPORTER_CAN_DELETE_CASE,
 } from "../../utils/errorMessages";
 import {
     createCase,
@@ -14,6 +13,7 @@ import {
 } from "../../services/case";
 import {decodeToken} from "../../utils/jwtUtils";
 import logger from "../../helpers/logger";
+import {countryMap} from "../../utils/localityUtils";
 
 export const listAllCases = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -73,14 +73,14 @@ export const createNewCase = async (req: Request, res: Response): Promise<Respon
 
         const decodedUserData = decodeToken(token);
 
-        const {title, description, tags, reportedByName} = req.body;
+        const {title, description, tags, reportedByName, country} = req.body;
 
-        if (!(title && description)) {
-            logger.log('error', TITLE_DESCRIPTION_REQUIRED_TO_CREATE_CASE)
-            return res.status(PRECONDITION_FAILED_CODE).json({error: TITLE_DESCRIPTION_REQUIRED_TO_CREATE_CASE});
+        if (!countryMap.get(country)) {
+            logger.log('error', INVALID_COUNTRY)
+            return res.status(PRECONDITION_FAILED_CODE).json({error: INVALID_COUNTRY});
         }
 
-        const createdCase = await createCase(decodedUserData.id, title, description, tags ? tags : [], reportedByName);
+        const createdCase = await createCase(decodedUserData.id, title, description, tags ? tags : [], reportedByName, country);
 
         return res.status(SUCCESS_CODE).json(createdCase);
 

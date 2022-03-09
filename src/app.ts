@@ -56,6 +56,10 @@ const url = process.env.MONGO ? process.env.MONGO : config.db.url;
 
 app.use(morgan('combined'))
 
+app.get('/ping', (req, res) => {
+    res.send('Pong!')
+})
+
 app.use('/auth', auth);
 app.use('/cases', cases);
 app.use('/files', files);

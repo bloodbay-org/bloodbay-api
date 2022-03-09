@@ -5,6 +5,10 @@ import {Model, model, Schema} from 'mongoose';
 import {MICase} from './types';
 
 const CaseSchema = new Schema({
+    country: {
+        type: String,
+        required: [true, 'country is required'],
+    },
     reportedByName: {
         type: String,
         required: [true, 'reportedByName is required'],

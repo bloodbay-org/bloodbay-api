@@ -1,5 +1,4 @@
 export const USERNAME_EMAIL_PASSWORD_REQUIRED_TO_CREATE_USER = 'Username, email and password are required to create a user.'
-export const TITLE_DESCRIPTION_REQUIRED_TO_CREATE_CASE = 'Title and description are required to create a cases.'
 export const CASE_ID_REQUIRED = 'CaseId required.'
 export const ONLY_REPORTER_CAN_DELETE_CASE = 'Only creator of cases can delete it.'
 export const USER_WITH_EMAIL_OR_USERNAME_ALREADY_EXISTS = 'User with this email or username already exists. Please use another email/username or reset your password.'
@@ -20,3 +19,4 @@ export const VERIFICATION_TOKEN_NOT_SUPPLIED = 'Verification token was not suppl
 export const VERIFICATION_REQUEST_DOES_NOT_EXIST = 'Verification request with this token doesn\'t exist.'
 export const VERIFICATION_REQUEST_ALREADY_PERFORMED = 'Verification request already performed, token expired.'
 export const ACCOUNT_NOT_VERIFIED = 'Please verify your account to proceed to the platform.'
+export const INVALID_COUNTRY = 'Please specify a valid country.'

@@ -7,6 +7,20 @@ import {CaseModel} from "../../models/case";
 import {UserModel} from "../../models/user";
 import {completeVerification, getEmailVerificationForUserId} from "../../services/emailVerification";
 
+const testCaseToCreate = {
+    title: 'Pfizer Side Effects',
+    description: 'Muscle Twitches',
+    tags: ['pfizer', 'moderna'],
+    reportedByName: 'Nick Shulhin',
+    country: 'Australia'
+};
+
+const testUserToCreate: IUser = {
+    email: 'mshulhin@gmail.com',
+    password: 'r1otPa$$1A',
+    username: 'nickshulhin'
+};
+
 describe('Cases', () => {
     afterAll(async () => {
         await server.close();
@@ -23,11 +37,6 @@ describe('Cases', () => {
     describe('POST /cases/', () => {
         it('should create new case in the system', async () => {
             //Given
-            const testUserToCreate: IUser = {
-                email: 'mshulhin@gmail.com',
-                password: 'r1otPa$$1A',
-                username: 'nickshulhin',
-            };
 
             await request(server).post('/auth/register').send(testUserToCreate).expect(200);
             const createdUser = await getUserByEmail(testUserToCreate.email)
@@ -39,14 +48,6 @@ describe('Cases', () => {
             }).expect(200);
 
             const authToken = JSON.parse(result.text);
-
-
-            const testCaseToCreate = {
-                title: 'Pfizer Side Effects',
-                description: 'Muscle Twitches',
-                tags: ['pfizer', 'moderna'],
-                reportedByName: 'Nick Shulhin'
-            };
 
             //When
             const createdCaseResult = await request(server).post('/cases/').send(testCaseToCreate).set('token', authToken).expect(200);
@@ -61,11 +62,6 @@ describe('Cases', () => {
         });
         it('should create new case in the system with tags', async () => {
             //Given
-            const testUserToCreate: IUser = {
-                email: 'mshulhin@gmail.com',
-                password: 'r1otPa$$1A',
-                username: 'nickshulhin'
-            };
 
             await request(server).post('/auth/register').send(testUserToCreate).expect(200);
             const createdUser = await getUserByEmail(testUserToCreate.email)
@@ -77,13 +73,6 @@ describe('Cases', () => {
             }).expect(200);
 
             const authToken = JSON.parse(result.text);
-
-            const testCaseToCreate = {
-                title: 'Pfizer Side Effects',
-                description: 'Muscle Twitches',
-                tags: ['pfizer', 'moderna'],
-                reportedByName: 'Nick Shulhin'
-            };
 
             //When
             const createdCaseResult = await request(server).post('/cases/').send(testCaseToCreate).set('token', authToken).expect(200);
@@ -100,11 +89,6 @@ describe('Cases', () => {
     describe('GET /cases/:caseId', () => {
         it('should retrieve case by caseId', async () => {
             //Given
-            const testUserToCreate: IUser = {
-                email: 'mshulhin@gmail.com',
-                password: 'r1otPa$$1A',
-                username: 'nickshulhin',
-            };
 
             await request(server).post('/auth/register').send(testUserToCreate).expect(200);
             const createdUser = await getUserByEmail(testUserToCreate.email)
@@ -116,13 +100,6 @@ describe('Cases', () => {
             }).expect(200);
 
             const authToken = JSON.parse(result.text);
-
-            const testCaseToCreate = {
-                title: 'Pfizer Side Effects',
-                description: 'Muscle Twitches',
-                tags: ['pfizer', 'moderna'],
-                reportedByName: 'Nick Shulhin'
-            };
 
             const createdCaseResult = await request(server).post('/cases/').send(testCaseToCreate).set('token', authToken).expect(200);
             const createdCase = JSON.parse(createdCaseResult.text);
@@ -142,12 +119,6 @@ describe('Cases', () => {
     describe('GET /cases/search', () => {
         it('should retrieve cases by matched tags', async () => {
             //Given
-            const testUserToCreate: IUser = {
-                email: 'mshulhin@gmail.com',
-                password: 'r1otPa$$1A',
-                username: 'nickshulhin',
-            };
-
             await request(server).post('/auth/register').send(testUserToCreate).expect(200);
             const createdUser = await getUserByEmail(testUserToCreate.email)
             const verificationRequest = await getEmailVerificationForUserId(createdUser._id)
@@ -159,21 +130,15 @@ describe('Cases', () => {
 
             const authToken = JSON.parse(result.text);
 
-            const testCaseToCreateMatched = {
-                title: 'Pfizer Side Effects',
-                description: 'Muscle Twitches',
-                tags: ['pfizer', 'moderna'],
-                reportedByName: 'Nick Shulhin'
-            };
-
             const testCaseToCreateUnmatched = {
+                ...testCaseToCreate,
                 title: 'Astra Side Effects',
                 description: 'Blood clots',
                 tags: ['astra', 'clots'],
                 reportedByName: 'Jeffrey Goldman'
             };
 
-            const createdCaseResult = await request(server).post('/cases/').send(testCaseToCreateMatched).set('token', authToken).expect(200);
+            const createdCaseResult = await request(server).post('/cases/').send(testCaseToCreate).set('token', authToken).expect(200);
             await request(server).post('/cases/').send(testCaseToCreateUnmatched).set('token', authToken).expect(200);
             const createdMatchedCase = JSON.parse(createdCaseResult.text);
 
@@ -192,11 +157,6 @@ describe('Cases', () => {
         });
         it('should retrieve all cases if no tags provided', async () => {
             //Given
-            const testUserToCreate: IUser = {
-                email: 'mshulhin@gmail.com',
-                password: 'r1otPa$$1A',
-                username: 'nickshulhin',
-            };
 
             await request(server).post('/auth/register').send(testUserToCreate).expect(200);
             const createdUser = await getUserByEmail(testUserToCreate.email)
@@ -209,21 +169,15 @@ describe('Cases', () => {
 
             const authToken = JSON.parse(result.text);
 
-            const testCaseToCreateMatched = {
-                title: 'Pfizer Side Effects',
-                description: 'Muscle Twitches',
-                tags: ['pfizer', 'moderna'],
-                reportedByName: 'Nick Shulhin'
-            };
-
             const testCaseToCreateUnmatched = {
+                ...testCaseToCreate,
                 title: 'Astra Side Effects',
                 description: 'Blood clots',
                 tags: ['astra', 'clots'],
                 reportedByName: 'Jeffrey Goldman'
             };
 
-            const createdCaseResult = await request(server).post('/cases/').send(testCaseToCreateMatched).set('token', authToken).expect(200);
+            const createdCaseResult = await request(server).post('/cases/').send(testCaseToCreate).set('token', authToken).expect(200);
             await request(server).post('/cases/').send(testCaseToCreateUnmatched).set('token', authToken).expect(200);
             const createdMatchedCase = JSON.parse(createdCaseResult.text);
 
@@ -244,11 +198,6 @@ describe('Cases', () => {
     describe('GET /cases/', () => {
         it('should retrieve all cases', async () => {
             //Given
-            const testUserToCreate: IUser = {
-                email: 'mshulhin@gmail.com',
-                password: 'r1otPa$$1A',
-                username: 'nickshulhin',
-            };
 
             await request(server).post('/auth/register').send(testUserToCreate).expect(200);
             const createdUser = await getUserByEmail(testUserToCreate.email)
@@ -260,13 +209,6 @@ describe('Cases', () => {
             }).expect(200);
 
             const authToken = JSON.parse(result.text);
-
-            const testCaseToCreate = {
-                title: 'Pfizer Side Effects',
-                description: 'Muscle Twitches',
-                tags: ['pfizer', 'moderna'],
-                reportedByName: 'Nick Shulhin'
-            };
 
             const createdCaseResult = await request(server).post('/cases/').send(testCaseToCreate).set('token', authToken).expect(200);
             const createdCase = JSON.parse(createdCaseResult.text);
@@ -287,11 +229,6 @@ describe('Cases', () => {
     describe('GET /cases/?userId=', () => {
         it('should retrieve all cases reported by user', async () => {
             //Given
-            const testUserToCreate: IUser = {
-                email: 'mshulhin@gmail.com',
-                password: 'r1otPa$$1A',
-                username: 'nickshulhin',
-            };
 
             await request(server).post('/auth/register').send(testUserToCreate).expect(200);
             const createdUser = await getUserByEmail(testUserToCreate.email)
@@ -304,18 +241,11 @@ describe('Cases', () => {
 
             const authToken = JSON.parse(result.text);
 
-            const testCaseToCreate = {
-                title: 'Pfizer Side Effects',
-                description: 'Muscle Twitches',
-                tags: ['pfizer', 'moderna'],
-                reportedByName: 'Nick Shulhin'
-            };
-
             const createdCaseResult = await request(server).post('/cases/').send(testCaseToCreate).set('token', authToken).expect(200);
             const createdCase = JSON.parse(createdCaseResult.text);
 
             //When
-            const fetchedCasesResult = await request(server).get(`/cases`).query({ userId: createdUser._id.toString() }).expect(200);
+            const fetchedCasesResult = await request(server).get(`/cases`).query({userId: createdUser._id.toString()}).expect(200);
             const fetchedCases = JSON.parse(fetchedCasesResult.text);
 
             //Then
@@ -330,11 +260,6 @@ describe('Cases', () => {
     describe('DELETE /cases/:caseId', () => {
         it('should delete case by caseId', async () => {
             //Given
-            const testUserToCreate: IUser = {
-                email: 'mshulhin@gmail.com',
-                password: 'r1otPa$$1A',
-                username: 'nickshulhin',
-            };
 
             await request(server).post('/auth/register').send(testUserToCreate).expect(200);
             const createdUser = await getUserByEmail(testUserToCreate.email)
@@ -346,13 +271,6 @@ describe('Cases', () => {
             }).expect(200);
 
             const authToken = JSON.parse(result.text);
-
-            const testCaseToCreate = {
-                title: 'Pfizer Side Effects',
-                description: 'Muscle Twitches',
-                tags: ['pfizer', 'moderna'],
-                reportedByName: 'Nick Shulhin'
-            };
 
             const createdCaseResult = await request(server).post('/cases/').send(testCaseToCreate).set('token', authToken).expect(200);
             const createdCase = JSON.parse(createdCaseResult.text);
